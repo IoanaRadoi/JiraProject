@@ -1,1 +1,1 @@
-# JiraProject
+# Licenta-Var-Alpha

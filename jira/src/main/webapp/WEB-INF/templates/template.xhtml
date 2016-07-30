@@ -1,0 +1,84 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>MyJIRAStatistics</title>
+        <link type="text/css" rel="stylesheet" href="css/jira.css" />
+    </h:head>
+    <h:body>
+        <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+        <script type="text/javascript">
+            function showStatus() {
+                PF('statusDialog').show();
+            }
+            function hideStatus() {
+                PF('statusDialog').hide();
+            }
+        </script>
+        <p:dialog widgetVar="statusDialog"
+                  modal="true" showHeader="false" draggable="false" 
+                  visible="false" closable="false" resizable="false">
+            <div class="loader" />
+        </p:dialog >
+        <h:form>
+            <div style="float: right">
+                <h:link value="Welcome #{sessionController.user.name} | " outcome="help" style="font-size: 14px; color: #324331" rendered="#{sessionController.logIn}"/> 
+                <p:commandLink action="#{sessionController.logout()}" value="Log Out | " ajax="false" style="font-size: 14px" rendered="#{sessionController.logIn}"/>
+                <p:commandLink action="#{sessionController.logInAction()}" value="Log In | " ajax="false" style="font-size: 14px" rendered="#{!sessionController.logIn}"/>
+                <p:commandLink action="#{sessionController.registrationAction()}" value="Registration" ajax="false" style="font-size: 14px" rendered="#{!sessionController.logIn}"/>
+            </div>
+           <br /> 
+            <p:tabMenu activeIndex="#{param.i}" rendered="#{sessionController.logInAndApproved}">
+                <p:menuitem value="Dashboard" outcome="index" onclick="PF('statusDialog').show()">
+                    <f:param name="i" value="0" />
+                </p:menuitem>
+                <p:menuitem value="Reports" outcome="statistics" onclick="PF('statusDialog').show()">
+                   <f:param name="i" value="1" />
+                </p:menuitem>
+                <p:menuitem value="General Analysis Projects" outcome="raports" onclick="PF('statusDialog').show()" >
+                    <f:param name="i" value="2" />
+                </p:menuitem>
+                <p:menuitem value="Performance Analysis" outcome="raportsperrelase" onclick="PF('statusDialog').show()" >
+                    <f:param name="i" value="3" />
+                </p:menuitem>   
+                
+                <p:menuitem value="Help" outcome="help">
+                   <f:param name="i" value="4" />
+                </p:menuitem>
+                
+                
+                <!--
+                <p:menuitem rendered="#{sessionController.logIn}" >
+                    <h:link value="Welcome #{sessionController.user.name}" outcome="help" />
+                </p:menuitem>
+                <p:menuitem rendered="#{sessionController.logIn}">
+                    <p:commandLink action="#{sessionController.logout()}" value="Log Out" ajax="false" />
+                </p:menuitem>
+                <p:menuitem rendered="#{!sessionController.logIn}">
+                    <p:commandLink action="#{sessionController.logInAction()}" value="Log In" ajax="false" />                
+                </p:menuitem>
+                <p:menuitem rendered="#{!sessionController.logIn}">
+                    <p:commandLink action="#{sessionController.registrationAction()}" value="Registration" ajax="false" />
+                </p:menuitem>
+                -->
+            </p:tabMenu>
+           <p:tabMenu activeIndex="#{param.i}" rendered="#{!sessionController.logInAndApproved}">
+                <p:menuitem value="Reports" outcome="statistics" onclick="PF('statusDialog').show()">
+                   <f:param name="i" value="0" />
+                </p:menuitem>
+                <p:menuitem value="General Analysis Projects" outcome="raports" onclick="PF('statusDialog').show()" >
+                    <f:param name="i" value="1" />
+                </p:menuitem>
+                <p:menuitem value="Performance Analysis" outcome="raportsperrelase" onclick="PF('statusDialog').show()" >
+                    <f:param name="i" value="2" />
+                </p:menuitem>
+            </p:tabMenu>       
+            
+        </h:form>
+        <ui:insert name="content">DEFAULT CONTENT</ui:insert>
+        <ui:include src="/footer.xhtml" />
+    </h:body>
+</html>

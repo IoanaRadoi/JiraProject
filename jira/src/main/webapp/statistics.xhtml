@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:f="http://java.sun.com/jsf/core">
+    <ui:define name="content">
+
+        <h:form>
+            <p:growl id="msgs" showDetail="true" />
+
+            <p:panel header="Generate Statistics Reports"
+                     style="margin-bottom:10px; margin-top:3%;">
+                <h:panelGrid columns="1" cellpadding="5">
+
+
+                    <h:panelGrid columns="6" cellpadding="5">
+                        <h:outputLabel for="statisticsProjects" value="Project:" />
+
+                        <p:selectCheckboxMenu id="statisticsProjects" value="#{projectController.projectsSelectedIds}" label="Projects" filter="true" filterMatchMode="startsWith" panelStyle="width:300px" >
+
+                            <f:selectItems value="#{projectController.allProjects}" var="t" itemLabel="#{t.name}" itemValue="#{t.id}" />
+                        </p:selectCheckboxMenu>                                                                         
+
+                        <p:spacer width="50" height="10" />
+                        
+                        <h:outputLabel for="releasesProjects" value="Release:" />
+
+                        <p:selectCheckboxMenu id="releasesProjects" value="#{projectController.releasesSelectedIds}" label="Releases" filter="true" filterMatchMode="startsWith" panelStyle="width:300px" >
+
+                            <f:selectItems value="#{projectController.allReleases}" var="t" itemLabel="#{t.name}" itemValue="#{t.id}" />
+                        </p:selectCheckboxMenu> 
+                    </h:panelGrid>
+
+
+
+                </h:panelGrid>
+
+                <br />
+                <p:commandButton value="Submit"
+                                 action="#{projectController.setRows()}" update="raportTable raportTableTotal">
+                </p:commandButton>
+
+
+                <p:separator />
+                
+                 <h:commandLink>
+                     <h:graphicImage url="./img/excel1.png" width="30" style="margin-left: 98%" id="msgExport1"/>
+                     <p:dataExporter type="xls" target="raportTable" fileName="raport" />
+                 </h:commandLink>
+                 <p:tooltip id="toolTipExport1" for="msgExport1" value="Export Raw Data."
+                       showEffect="clip" hideEffect="explode" />
+
+                <p:dataTable id="raportTable" widgetVar="raportTable" 
+                             value="#{projectController.rowsRaport}" var="rowReport"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}  "
+                             paginator="true" rows="4" paginatorPosition="bottom"
+                             emptyMessage="No data found with given criteria">
+
+
+<!--                    <f:facet name="{Exporters}">
+
+                        <h:commandLink>
+                            <h:graphicImage url="./img/excel1.png" width="30" style="float:right;"/>
+                            <p:dataExporter type="xls" target="raportTable" fileName="raport" />
+                        </h:commandLink>
+
+
+
+                    </f:facet>-->
+
+
+
+                    <p:column headerText="Release year" style="text-align: center" sortBy="#{rowReport.anRelease}">
+                        <h:outputText value="#{rowReport.anRelease}" />
+                    </p:column>
+
+                    <p:column headerText="Release" style="text-align: center">
+                        <h:outputText value="#{rowReport.releaseName}" />
+                    </p:column>
+
+
+                    <p:column headerText="Project" style="text-align: center">
+                        <h:outputText value="#{rowReport.projectName}" />
+                    </p:column>
+
+                    <p:column headerText="Category" style="text-align: center">
+                        <h:outputText value="#{rowReport.category}" />
+                    </p:column>
+
+                    <p:column headerText="Item" style="text-align: center">
+                        <h:outputText value="#{rowReport.item}" />
+                    </p:column>
+
+                    <p:column headerText="Sprint" style="text-align: center">
+                        <h:outputText value="#{rowReport.sprintName}" />
+                    </p:column>
+
+                    <p:column headerText="Story Point" style="text-align: center">
+                        <h:outputText value="#{rowReport.storyPoint}" />
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:spacer height="50" />
+                 <h:commandLink>
+                     <h:graphicImage url="./img/excel1.png" width="30" style="margin-left: 98%" id="msgExport2"/>
+                     <p:dataExporter type="xls" target="raportTableTotal" fileName="raportTotalPerRelease" />
+                 </h:commandLink>
+                <p:tooltip id="toolTipExport2" for="msgExport2" value="Export Raw Data."
+                       showEffect="clip" hideEffect="explode" />
+                    
+                <p:dataTable id="raportTableTotal" widgetVar="raportTableTotal" 
+                             value="#{projectController.rowsTotalPerRelease}" var="rowReportTotal"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             paginator="true" rows="4" paginatorPosition="bottom"
+                             emptyMessage="No data found with given criteria">
+
+<!--                    <f:facet name="{Exporters}">
+
+                        <h:commandLink>
+                            <p:commandButton value="Export" />
+                            <p:dataExporter type="xls" target="raportTableTotal" fileName="raportTotalPerRelease" />
+                        </h:commandLink>
+
+
+
+                    </f:facet>-->
+
+                    <p:column headerText="Release year" style="text-align: center">
+                        <h:outputText value="#{rowReportTotal.releaseYear}" />
+                    </p:column>
+                    <p:column headerText="Release name" style="text-align: center">
+                        <h:outputText value="#{rowReportTotal.releaseName}" />
+                    </p:column>
+                    <p:column headerText="Project name" style="text-align: center">
+                        <h:outputText value="#{rowReportTotal.projectName}" />
+                    </p:column>
+
+                    <p:column headerText="Total story points per Release" style="text-align: center">
+                        <h:outputText value="#{rowReportTotal.totalPerRelease}" />
+                    </p:column>
+
+
+
+                </p:dataTable>
+
+
+
+            </p:panel>
+        </h:form>
+
+
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"	
+                xmlns:f="http://java.sun.com/jsf/core">
+    <ui:define name="content">
+
+        <h:form id="formRaportsStatistics">
+             <p:outputLabel class="alert alert-info"  
+                            style="float: left; width: 100%; height: 5%;"
+                               value="Statistics On Capacity Sprints Projects"/>
+            
+            <h:panelGrid columns="9" cellpadding="10">
+
+                <p:outputLabel value="Project:" />
+                <p:selectOneMenu id="project" value="#{statisticsPerRelease.projectSelectedId}" style="padding-right: 28px;
+        text-align: left;display: flex !important;  width: 100% !important;">
+                    <p:ajax event="change" update="@form" />
+                    <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{statisticsPerRelease.projects}" var="t" itemLabel="#{t.name}" itemValue="#{t.id}" />
+                </p:selectOneMenu>
+
+                <p:spacer width="50" height="10" />
+                
+                <p:outputLabel value="Release:" />
+                <p:selectOneMenu id="release" value="#{statisticsPerRelease.releaseSelectedId}">
+                    <p:ajax event="change" update="@form"/>
+                    <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{statisticsPerRelease.projectSelected.releases}" var="t" itemLabel="#{t.name}" itemValue="#{t.id}" />
+                </p:selectOneMenu>
+                
+                <p:spacer width="50" height="10" />
+                
+                <p:outputLabel value="Sprint:" />
+                <p:selectOneMenu id="sprint" value="#{statisticsPerRelease.sprintSelectedId}">
+                    <p:ajax event="change" update="@form"/>
+                    <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{statisticsPerRelease.releaseSelected.sprints}" var="t" itemLabel="#{t.name}" itemValue="#{t.id}" />
+                </p:selectOneMenu>
+
+            </h:panelGrid>
+
+<!--             <p:spacer width="50" height="25" />-->
+             <br/>
+             <br/>
+            
+            <p:commandButton id="buttonCreateChart" value="Show Statistics"
+                             action="#{statisticsPerRelease.createPieModel1and2()}" update="pieChartR">
+            </p:commandButton>    
+            
+           
+     
+        </h:form>
+        
+        
+        <h:form id="pieChartR" >
+             <h:panelGrid columns="6" cellpadding="10">
+            <p:chart  type="pie" model="#{statisticsPerRelease.pieModel1}" style="width:400px;height:300px"  rendered="#{statisticsPerRelease.releaseSelectedIdCompleted}" />
+            <p:chart  type="pie" model="#{statisticsPerRelease.pieModel2}" style="width:400px;height:300px"  rendered="#{statisticsPerRelease.sprintSelectedIdCompleted}" />
+             </h:panelGrid>
+        </h:form>
+      
+
+
+
+    </ui:define>
+</ui:composition>
